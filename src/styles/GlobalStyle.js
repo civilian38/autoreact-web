@@ -8,31 +8,35 @@ const GlobalStyle = createGlobalStyle`
   body {
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     line-height: 1.5;
     font-weight: 400;
     margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
     min-height: 100vh;
-    transition: all 0.25s linear;
+    transition: background-color 0.25s linear, color 0.25s linear;
   }
 
   #root {
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+    padding: 0 2rem; /* Adjusted padding */
+    text-align: left; /* Changed from center to left */
   }
 
   a {
     color: ${({ theme }) => theme.primary};
-    text-decoration: inherit;
+    text-decoration: none;
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
   }
 `;
 

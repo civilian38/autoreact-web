@@ -1,19 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import ProjectList from '@/components/projects/ProjectList';
+import Button from '@/components/ui/Button';
 
-const HomeContainer = styled.div`
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+const LoggedOutContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 120px); // Full height minus header
+  text-align: center;
+  height: calc(100vh - 120px);
 `;
 
 const Title = styled.h1`
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  font-weight: 600;
 `;
 
 const ButtonGroup = styled.div`
@@ -21,38 +31,23 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-const StyledLink = styled(Link)`
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.primary};
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #535bf2;
-    text-decoration: none;
-  }
-`;
-
 const HomePage = () => {
   const { user } = useAuth();
 
   return (
-    <HomeContainer>
+    <PageContainer>
       {user ? (
-        <Title>반갑습니다!</Title>
+        <ProjectList />
       ) : (
-        <>
+        <LoggedOutContainer>
           <Title>로그인하세요!</Title>
           <ButtonGroup>
-            <StyledLink to="/auth/login">로그인</StyledLink>
-            <StyledLink to="/auth/signup">회원가입</StyledLink>
+            <Button to="/auth/login">로그인</Button>
+            <Button to="/auth/signup">회원가입</Button>
           </ButtonGroup>
-        </>
+        </LoggedOutContainer>
       )}
-    </HomeContainer>
+    </PageContainer>
   );
 };
 

@@ -10,55 +10,76 @@ const HeaderContainer = styled.header`
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center content horizontally */
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: ${({ theme }) => theme.cardBg};
-  border-bottom: 1px solid ${({ theme }) => theme.cardBorder};
+  padding: 0 2rem;
+  background-color: ${({ theme }) => theme.header.bg};
+  border-bottom: 1px solid ${({ theme }) => theme.header.border};
   z-index: 1000;
   height: 60px;
+`;
+
+const HeaderContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
 `;
 
 const Logo = styled(Link)`
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.header.text};
 `;
 
 const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 `;
 
-const NavLink = styled(Link)`
+const AuthLink = styled(Link)`
   text-decoration: none;
   font-weight: 500;
+  color: ${({ theme }) => theme.text};
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.cardBorder};
+    text-decoration: none;
+  }
 `;
 
 const AuthButton = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
   cursor: pointer;
   font-size: 1em;
   font-weight: 500;
-  padding: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
 
   &:hover {
-    text-decoration: underline;
+    background-color: ${({ theme }) => theme.cardBorder};
+    text-decoration: none;
   }
 `;
 
 const ThemeToggleButton = styled.button`
-    background: ${({ theme }) => theme.primary};
-    border: 2px solid ${({ theme }) => theme.toggleBorder};
+    background: none;
+    border: 1px solid ${({ theme }) => theme.cardBorder};
     color: ${({ theme }) => theme.text};
-    border-radius: 30px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size:0.8rem;
-    padding: 0.6rem;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 16px;
 `;
 
 const Header = () => {
@@ -67,17 +88,19 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <Logo to="/home">AutoReact</Logo>
-      <Nav>
-        {user ? (
-          <AuthButton onClick={logout}>Logout</AuthButton>
-        ) : (
-          <NavLink to="/auth/login">Login</NavLink>
-        )}
-        <ThemeToggleButton onClick={toggleTheme}>
-          Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
-        </ThemeToggleButton>
-      </Nav>
+      <HeaderContent>
+        <Logo to="/home">AutoReact</Logo>
+        <Nav>
+          {user ? (
+            <AuthButton onClick={logout}>Logout</AuthButton>
+          ) : (
+            <AuthLink to="/auth/login">Login</AuthLink>
+          )}
+          <ThemeToggleButton onClick={toggleTheme}>
+            {theme === 'light' ? 'Dark' : 'Light'}
+          </ThemeToggleButton>
+        </Nav>
+      </HeaderContent>
     </HeaderContainer>
   );
 };

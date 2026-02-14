@@ -1,23 +1,55 @@
 export const lightTheme = {
-  body: '#FFF',
-  text: '#363537',
-  toggleBorder: '#FFF',
+  body: '#FFFFFF',
+  text: '#1F2328',
+  subtleText: '#57606A',
   background: '#F6F8FA',
-  primary: '#646cff',
+  primary: '#0969DA',
   cardBg: '#FFFFFF',
-  cardBorder: '#E1E4E8',
-  inputBg: '#FAFBFC',
-  inputBorder: '#E1E4E8',
+  cardBorder: '#D0D7DE',
+  inputBg: '#FFFFFF',
+  inputBorder: '#D0D7DE',
+  button: {
+    primaryBg: '#2DA44E',
+    primaryText: '#FFFFFF',
+    primaryBorder: 'rgba(27, 31, 36, 0.15)',
+    primaryShadow: '0 1px 0 rgba(27, 31, 36, 0.1)',
+    primaryHoverBg: '#2C974B',
+    primaryHoverBorder: 'rgba(27, 31, 36, 0.15)',
+  },
+  header: {
+    bg: '#F6F8FA',
+    border: '#D0D7DE',
+    text: '#1F2328',
+  },
+  table: {
+    headerBg: '#F6F8FA'
+  }
 };
 
 export const darkTheme = {
-  body: '#1C2025',
-  text: '#FAFAFA',
-  toggleBorder: '#6B8096',
-  background: '#0D1117',
-  primary: '#747bff',
-  cardBg: '#161B22',
-  cardBorder: '#30363D',
-  inputBg: '#010409',
-  inputBorder: '#30363D',
+  body: '#0D1117',
+  text: '#E6EDF3',
+  subtleText: '#848D97',
+  background: '#010409',
+  primary: '#58A6FF',
+  cardBg: '#0D1117',
+  cardBorder: '#21262D',
+  inputBg: '#0D1117',
+  inputBorder: '#21262D',
+  button: {
+    primaryBg: '#238636',
+    primaryText: '#FFFFFF',
+    primaryBorder: 'rgba(240, 246, 252, 0.1)',
+    primaryShadow: '0 0 transparent',
+    primaryHoverBg: '#2EA043',
+    primaryHoverBorder: 'rgba(240, 246, 252, 0.1)',
+  },
+  header: {
+    bg: '#161B22',
+    border: '#30363D',
+    text: '#E6EDF3',
+  },
+  table: {
+    headerBg: '#161B22'
+  }
 };
