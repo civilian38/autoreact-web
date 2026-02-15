@@ -15,6 +15,11 @@ export const lightTheme = {
     primaryShadow: '0 1px 0 rgba(27, 31, 36, 0.1)',
     primaryHoverBg: '#2C974B',
     primaryHoverBorder: 'rgba(27, 31, 36, 0.15)',
+    dangerBg: '#DA3633',
+    dangerText: '#FFFFFF',
+    dangerBorder: 'rgba(27, 31, 36, 0.15)',
+    dangerHoverBg: '#C93C37',
+    dangerHoverBorder: 'rgba(27, 31, 36, 0.15)',
   },
   header: {
     bg: '#F6F8FA',
@@ -43,6 +48,11 @@ export const darkTheme = {
     primaryShadow: '0 0 transparent',
     primaryHoverBg: '#2EA043',
     primaryHoverBorder: 'rgba(240, 246, 252, 0.1)',
+    dangerBg: '#DA3633',
+    dangerText: '#FFFFFF',
+    dangerBorder: 'rgba(240, 246, 252, 0.1)',
+    dangerHoverBg: '#F85149',
+    dangerHoverBorder: 'rgba(240, 246, 252, 0.1)',
   },
   header: {
     bg: '#161B22',

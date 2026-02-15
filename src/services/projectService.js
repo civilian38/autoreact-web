@@ -31,3 +31,35 @@ export const createProject = async (projectData) => {
     throw error;
   }
 };
+
+/**
+ * Updates an existing project.
+ * @param {string | number} projectId - The ID of the project to update.
+ * @param {object} projectData - The data to update.
+ * @returns {Promise<object>} The updated project data.
+ * @throws Will throw an error if the API request fails.
+ */
+export const updateProject = async (projectId, projectData) => {
+  try {
+    const response = await api.put(`/project/${projectId}/`, projectData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating project for ID ${projectId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes a project.
+ * @param {string | number} projectId - The ID of the project to delete.
+ * @returns {Promise<void>}
+ * @throws Will throw an error if the API request fails.
+ */
+export const deleteProject = async (projectId) => {
+  try {
+    await api.delete(`/project/${projectId}/`);
+  } catch (error) {
+    console.error(`Error deleting project for ID ${projectId}:`, error);
+    throw error;
+  }
+};

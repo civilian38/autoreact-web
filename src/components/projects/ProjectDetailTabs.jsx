@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const TabsContainer = styled.div`
@@ -41,22 +41,16 @@ const TabButton = styled.button`
   `}
 `;
 
-const ProjectDetailTabs = () => {
-  const TABS = [
-    'API DOC',
-    'Page Description',
-    'Files',
-    'Discussion',
-    'Generate',
-    'Project Settings',
-  ];
-  const [activeTab, setActiveTab] = useState(TABS[0]);
+export const TABS = [
+  'API DOC',
+  'Page Description',
+  'Files',
+  'Discussion',
+  'Generate',
+  'Project Settings',
+];
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-    alert(`'${tab}' 기능은 아직 구현되지 않았습니다.`);
-  };
-
+const ProjectDetailTabs = ({ activeTab, onTabClick }) => {
   return (
     <TabsContainer>
       <TabList>
@@ -64,7 +58,7 @@ const ProjectDetailTabs = () => {
           <TabButton
             key={tab}
             $isActive={activeTab === tab}
-            onClick={() => handleTabClick(tab)}
+            onClick={() => onTabClick(tab)}
           >
             {tab}
           </TabButton>
