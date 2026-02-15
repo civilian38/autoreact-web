@@ -7,6 +7,7 @@ import HomePage from '@/pages/Home/HomePage';
 import LoginPage from '@/pages/Auth/Login/LoginPage';
 import SignupPage from '@/pages/Auth/Signup/SignupPage';
 import ProjectDetailPage from '@/pages/ProjectDetail/ProjectDetailPage';
+import ProjectCreatePage from '@/pages/ProjectCreate/ProjectCreatePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/signup" element={<SignupPage />} />
+            <Route path="/project/create" element={<ProjectCreatePage />} />
             <Route path="/project/:projectId" element={<ProjectDetailPage />} />
           </Routes>
         </Layout>

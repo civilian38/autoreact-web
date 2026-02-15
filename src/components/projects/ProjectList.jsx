@@ -110,7 +110,7 @@ const ProjectList = () => {
     <ProjectListContainer>
       <ListHeader>
         <Title>내 프로젝트</Title>
-        <Button onClick={() => alert('새 프로젝트 생성 기능은 아직 구현되지 않았습니다.')}>
+        <Button to="/project/create">
           New Project
         </Button>
       </ListHeader>

@@ -15,3 +15,19 @@ export const getProjectDetail = async (projectId) => {
     throw error;
   }
 };
+
+/**
+ * Creates a new project.
+ * @param {object} projectData - The data for the new project.
+ * @returns {Promise<object>} The created project data.
+ * @throws Will throw an error if the API request fails.
+ */
+export const createProject = async (projectData) => {
+  try {
+    const response = await api.post('/project/', projectData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating project:', error);
+    throw error;
+  }
+};
