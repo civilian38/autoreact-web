@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { useProjects } from '@/hooks/useProjects';
 import Button from '@/components/ui/Button';
 
 const ProjectListContainer = styled.div`
   width: 100%;
+  max-width: 1280px; /* Added for consistency */
   margin: 2rem auto;
+  padding: 0 1rem; /* Added for spacing */
 `;
 
 const ListHeader = styled.div`
@@ -49,7 +52,7 @@ const ProjectInfo = styled.div`
   flex-direction: column;
 `;
 
-const ProjectName = styled.a`
+const ProjectName = styled(Link)`
   font-weight: 600;
   font-size: 16px;
   color: ${({ theme }) => theme.primary};
@@ -117,7 +120,7 @@ const ProjectList = () => {
           {projects.map((project) => (
             <ProjectListItem key={project.id}>
               <ProjectInfo>
-                <ProjectName href={`/project/${project.id}`}>{project.name}</ProjectName>
+                <ProjectName to={`/project/${project.id}`}>{project.name}</ProjectName>
                 <ProjectDescription>{project.description}</ProjectDescription>
               </ProjectInfo>
               <ProjectDate>{new Date(project.created_at).toLocaleDateString()}</ProjectDate>
