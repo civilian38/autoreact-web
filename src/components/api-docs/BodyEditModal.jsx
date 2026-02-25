@@ -4,6 +4,7 @@ import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Editor from '@monaco-editor/react';
+import { useTheme } from '@/hooks/useTheme';
 import {
   createRequestBody,
   updateRequestBody,
@@ -41,6 +42,7 @@ const BodyEditModal = ({ isOpen, onClose, type, docId, initialData, onSave }) =>
   const [jsonContent, setJsonContent] = useState('{\n  \n}');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [jsonError, setJsonError] = useState(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (isOpen) {
@@ -61,6 +63,25 @@ const BodyEditModal = ({ isOpen, onClose, type, docId, initialData, onSave }) =>
   const handleEditorChange = (value) => {
     setJsonContent(value);
     setJsonError(null);
+  };
+
+  const handleEditorWillMount = (monaco) => {
+    monaco.editor.defineTheme('custom-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#0D1117', // 프로젝트 테마 바탕색과 동일하게
+      }
+    });
+    monaco.editor.defineTheme('custom-light', {
+      base: 'vs',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#FFFFFF',
+      }
+    });
   };
 
   const handleSave = async () => {
@@ -139,6 +160,8 @@ const BodyEditModal = ({ isOpen, onClose, type, docId, initialData, onSave }) =>
             defaultLanguage="json"
             value={jsonContent}
             onChange={handleEditorChange}
+            beforeMount={handleEditorWillMount}
+            theme={theme === 'dark' ? 'custom-dark' : 'custom-light'}
             options={{
               minimap: { enabled: false },
               formatOnPaste: true,

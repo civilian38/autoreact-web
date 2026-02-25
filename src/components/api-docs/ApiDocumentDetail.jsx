@@ -10,6 +10,8 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Textarea from '@/components/ui/Textarea';
 import UrlParameterLinkModal from './UrlParameterLinkModal';
+import BodyEditModal from './BodyEditModal';
+import BodyItem from './body/BodyItem';
 
 const Container = styled.div`
   padding: 20px;
@@ -76,6 +78,13 @@ const Label = styled.label`
   color: ${({ theme }) => theme.subtleText};
 `;
 
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
 const HttpMethodOptions = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
 
 const ApiDocumentDetail = ({ documentId, onDelete, onUpdate }) => {
@@ -89,6 +98,7 @@ const ApiDocumentDetail = ({ documentId, onDelete, onUpdate }) => {
 
   // Modals
   const [paramModalOpen, setParamModalOpen] = useState(false);
+  const [bodyAddModalState, setBodyAddModalState] = useState({ isOpen: false, type: 'request' });
 
   const fetchDetail = useCallback(async () => {
     setLoading(true);
@@ -102,7 +112,8 @@ const ApiDocumentDetail = ({ documentId, onDelete, onUpdate }) => {
       });
     } catch (error) {
       console.error('Failed to fetch detail:', error);
-    } finally {
+    }
+    finally {
       setLoading(false);
     }
   }, [documentId]);
@@ -132,6 +143,19 @@ const ApiDocumentDetail = ({ documentId, onDelete, onUpdate }) => {
       console.error('Delete failed:', error);
       alert('삭제에 실패했습니다.');
     }
+  };
+
+  const openAddBodyModal = (type) => {
+    setBodyAddModalState({ isOpen: true, type });
+  };
+
+  const closeBodyModal = () => {
+    setBodyAddModalState({ isOpen: false, type: 'request' });
+  };
+
+  const handleBodySaved = () => {
+    closeBodyModal();
+    fetchDetail();
   };
 
   if (loading) return <Container>Loading...</Container>;
@@ -196,21 +220,58 @@ const ApiDocumentDetail = ({ documentId, onDelete, onUpdate }) => {
 
       <TabContent>
         {activeTab === 'bodies' && (
-          <div style={{ padding: '40px 20px', textAlign: 'center', backgroundColor: 'transparent', border: '1px dashed #d0d7de', borderRadius: '6px', marginTop: '16px' }}>
-            <h3 style={{ margin: '0 0 10px 0', color: '#1f2328' }}>[구현 예정]</h3>
-            <p style={{ margin: 0, color: '#57606a', fontSize: '0.95rem' }}>
-              Request 및 Response Body의 CRUD 기능은 JSON 특화 편집기를 도입하여 추후 제공될 예정입니다.
-            </p>
+          <div style={{ marginTop: '24px' }}>
+            <div style={{ marginBottom: '32px' }}>
+              <SectionHeader>
+                <h4 style={{ margin: 0 }}>Request Bodies</h4>
+                <Button onClick={() => openAddBodyModal('request')}>+ Add Request Body</Button>
+              </SectionHeader>
+              {data.request_bodies.length === 0 && <p style={{ color: '#888', fontSize: '0.9rem' }}>No request bodies defined.</p>}
+              {data.request_bodies.map(body => (
+                <BodyItem
+                  key={body.id}
+                  type="request"
+                  summaryData={body}
+                  onDelete={fetchDetail}
+                  onUpdate={fetchDetail}
+                />
+              ))}
+            </div>
+
+            <div>
+              <SectionHeader>
+                <h4 style={{ margin: 0 }}>Response Bodies</h4>
+                <Button onClick={() => openAddBodyModal('response')}>+ Add Response Body</Button>
+              </SectionHeader>
+              {data.response_bodies.length === 0 && <p style={{ color: '#888', fontSize: '0.9rem' }}>No response bodies defined.</p>}
+              {data.response_bodies.map(body => (
+                <BodyItem
+                  key={body.id}
+                  type="response"
+                  summaryData={body}
+                  onDelete={fetchDetail}
+                  onUpdate={fetchDetail}
+                />
+              ))}
+            </div>
+
+            <BodyEditModal
+              isOpen={bodyAddModalState.isOpen}
+              onClose={closeBodyModal}
+              type={bodyAddModalState.type}
+              docId={documentId}
+              onSave={handleBodySaved}
+            />
           </div>
         )}
 
         {activeTab === 'params' && (
-          <div style={{ marginTop: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ marginTop: '24px' }}>
+            <SectionHeader>
               <h4 style={{ margin: 0 }}>Linked URL Parameters</h4>
               <Button onClick={() => setParamModalOpen(true)}>Manage Links</Button>
-            </div>
-            {data.url_parameters.length === 0 && <p style={{ color: '#888' }}>No linked parameters.</p>}
+            </SectionHeader>
+            {data.url_parameters.length === 0 && <p style={{ color: '#888', fontSize: '0.9rem' }}>No linked parameters.</p>}
             <ParamList>
               {data.url_parameters.map(param => (
                 <ParamItem key={param.id}>
