@@ -20,8 +20,11 @@ const ModalContent = styled.div`
   border-radius: 8px;
   padding: 24px;
   width: 100%;
-  max-width: 450px;
+  max-width: ${({ $maxWidth }) => $maxWidth || '450px'};
+  max-height: 90vh;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
 `;
 
 const ModalHeader = styled.div`
@@ -42,25 +45,34 @@ const CloseButton = styled.button`
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  line-height: 1;
   color: ${({ theme }) => theme.subtleText};
   &:hover {
     color: ${({ theme }) => theme.text};
   }
 `;
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const ModalBody = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+`;
+
+const Modal = ({ isOpen, onClose, title, children, maxWidth }) => {
   if (!isOpen) {
     return null;
   }
 
   return (
     <ModalBackdrop onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()} $maxWidth={maxWidth}>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
           <CloseButton onClick={onClose}>&times;</CloseButton>
         </ModalHeader>
-        {children}
+        <ModalBody>
+          {children}
+        </ModalBody>
       </ModalContent>
     </ModalBackdrop>
   );
