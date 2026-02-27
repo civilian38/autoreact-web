@@ -6,13 +6,13 @@ import ApiDocCreateModal from './ApiDocCreateModal';
 import Button from '@/components/ui/Button';
 
 const METHOD_COLORS = {
-  GET: '#0366d6',
-  POST: '#28a745',
-  PUT: '#d29922',
-  PATCH: '#dbab09',
-  DELETE: '#d73a49',
-  HEAD: '#6a737d',
-  OPTIONS: '#6a737d',
+  GET: '#0CBB52',     // 초록색 (Success/Get)
+  POST: '#FFB400',    // 노란색/황색 (Warning/Post)
+  PUT: '#0970E6',     // 파란색 (Info/Put)
+  PATCH: '#A153B0',   // 보라색 (Purple/Patch)
+  DELETE: '#EB2013',  // 빨간색 (Danger/Delete)
+  HEAD: '#6A737D',    // 회색 (Neutral)
+  OPTIONS: '#6A737D', // 회색 (Neutral)
 };
 
 const ListContainer = styled.div`
