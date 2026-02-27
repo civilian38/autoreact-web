@@ -20,12 +20,12 @@ const EditorContainer = styled.div`
     --jse-menu-color: ${({ theme }) => theme.text};
     --jse-text-color-inverse: ${({ theme }) => theme.text};
     
-    /* 다크 모드에서 JSON key와 value의 가독성을 높이기 위한 색상 재정의 */
     --jse-key-color: #58A6FF;
     --jse-value-color-string: #A5D6FF;
     --jse-value-color-number: #79C0FF;
     --jse-value-color-boolean: #D2A8FF;
     --jse-value-color-null: #8B949E;
+    --jse-delimiter-color: #FFFFFF;
   }
 `;
 
