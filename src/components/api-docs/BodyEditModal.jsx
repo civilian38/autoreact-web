@@ -176,8 +176,8 @@ const BodyEditModal = ({ isOpen, onClose, type, docId, initialData, onSave }) =>
       </FormGroup>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-        <Button onClick={onClose} style={{ background: '#6e7681' }}>Cancel</Button>
-        <Button onClick={handleSave} disabled={isSubmitting}>
+        <Button variant="secondary" onClick={onClose}>Cancel</Button>
+        <Button variant="primary" onClick={handleSave} disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : 'Save'}
         </Button>
       </div>

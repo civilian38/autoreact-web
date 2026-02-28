@@ -1,7 +1,46 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
-const buttonStyles = css`
+const getButtonStyles = (variant, theme) => {
+  switch (variant) {
+    case 'danger':
+      return css`
+        background-color: ${theme.button.dangerBg};
+        color: ${theme.button.dangerText};
+        border-color: ${theme.button.dangerBorder};
+        box-shadow: ${theme.button.dangerShadow || 'none'};
+        &:hover:not(:disabled) {
+          background-color: ${theme.button.dangerHoverBg};
+          border-color: ${theme.button.dangerHoverBorder};
+        }
+      `;
+    case 'secondary':
+      return css`
+        background-color: ${theme.button.secondaryBg};
+        color: ${theme.button.secondaryText};
+        border-color: ${theme.button.secondaryBorder};
+        box-shadow: ${theme.button.secondaryShadow || 'none'};
+        &:hover:not(:disabled) {
+          background-color: ${theme.button.secondaryHoverBg};
+          border-color: ${theme.button.secondaryHoverBorder};
+        }
+      `;
+    case 'primary':
+    default:
+      return css`
+        background-color: ${theme.button.primaryBg};
+        color: ${theme.button.primaryText};
+        border-color: ${theme.button.primaryBorder};
+        box-shadow: ${theme.button.primaryShadow};
+        &:hover:not(:disabled) {
+          background-color: ${theme.button.primaryHoverBg};
+          border-color: ${theme.button.primaryHoverBorder};
+        }
+      `;
+  }
+};
+
+const baseButtonStyles = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -19,16 +58,7 @@ const buttonStyles = css`
   text-decoration: none; /* Remove underline from links */
   transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
 
-  background-color: ${({ theme }) => theme.button.primaryBg};
-  color: ${({ theme }) => theme.button.primaryText};
-  border-color: ${({ theme }) => theme.button.primaryBorder};
-  box-shadow: ${({ theme }) => theme.button.primaryShadow};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.button.primaryHoverBg};
-    border-color: ${({ theme }) => theme.button.primaryHoverBorder};
-    text-decoration: none; /* Ensure no underline on hover */
-  }
+  ${({ $variant, theme }) => getButtonStyles($variant, theme)}
 
   &:disabled {
     cursor: not-allowed;
@@ -37,19 +67,18 @@ const buttonStyles = css`
 `;
 
 const StyledButton = styled.button`
-  ${buttonStyles}
+  ${baseButtonStyles}
 `;
 
 const StyledLinkButton = styled(Link)`
-  ${buttonStyles}
+  ${baseButtonStyles}
 `;
 
-
-const Button = ({ children, to, ...props }) => {
+const Button = ({ children, to, variant = 'primary', ...props }) => {
   if (to) {
-    return <StyledLinkButton to={to} {...props}>{children}</StyledLinkButton>;
+    return <StyledLinkButton to={to} $variant={variant} {...props}>{children}</StyledLinkButton>;
   }
-  return <StyledButton {...props}>{children}</StyledButton>;
+  return <StyledButton $variant={variant} {...props}>{children}</StyledButton>;
 };
 
 export default Button;

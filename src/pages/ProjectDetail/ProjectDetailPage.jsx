@@ -5,6 +5,7 @@ import { useProjectDetail } from '@/hooks/useProjectDetail';
 import ProjectDetailTabs, { TABS } from '@/components/projects/ProjectDetailTabs';
 import ProjectSettings from './ProjectSettings';
 import ApiDocsTab from '@/components/api-docs/ApiDocsTab';
+import PageDescriptionTab from '@/components/page-description/PageDescriptionTab';
 
 // Wrapper for the entire page to ensure proper layout for sticky elements
 const PageWrapper = styled.div`
@@ -82,9 +83,10 @@ const ProjectDetailPage = () => {
     switch (activeTab) {
       case 'API DOC':
         return <ApiDocsTab projectId={projectId} />;
+      case 'Page Description':
+        return <PageDescriptionTab projectId={projectId} />;
       case 'Project Settings':
         return <ProjectSettings project={project} onUpdate={updateProject} onDelete={deleteProject} />;
-      case 'Page Description':
       case 'Files':
       case 'Discussion':
       case 'Generate':

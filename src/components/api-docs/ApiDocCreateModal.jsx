@@ -102,8 +102,8 @@ const ApiDocCreateModal = ({ isOpen, onClose, onSave }) => {
       </FormGroup>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '20px' }}>
-        <Button onClick={onClose} style={{ background: '#6e7681', borderColor: '#6e7681' }}>Cancel</Button>
-        <Button onClick={handleSubmit} disabled={isSubmitting}>
+        <Button variant="secondary" onClick={onClose}>Cancel</Button>
+        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
           {isSubmitting ? 'Creating...' : 'Create'}
         </Button>
       </div>
