@@ -8,8 +8,7 @@ const ListContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  max-height: 500px;
-  overflow-y: hidden;
+  height: 500px; 
 `;
 
 const Section = styled.div`
@@ -18,6 +17,7 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0; 
 `;
 
 const SectionHeader = styled.div`
