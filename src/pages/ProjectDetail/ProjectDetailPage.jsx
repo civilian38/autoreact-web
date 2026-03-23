@@ -6,6 +6,7 @@ import ProjectDetailTabs, { TABS } from '@/components/projects/ProjectDetailTabs
 import ProjectSettings from './ProjectSettings';
 import ApiDocsTab from '@/components/api-docs/ApiDocsTab';
 import PageDescriptionTab from '@/components/page-description/PageDescriptionTab';
+import ReactFilesView from '@/components/files/ReactFilesView';
 
 // Wrapper for the entire page to ensure proper layout for sticky elements
 const PageWrapper = styled.div`
@@ -85,9 +86,10 @@ const ProjectDetailPage = () => {
         return <ApiDocsTab projectId={projectId} />;
       case 'Page Description':
         return <PageDescriptionTab projectId={projectId} />;
+      case 'Files':
+        return <ReactFilesView projectId={projectId} />;
       case 'Project Settings':
         return <ProjectSettings project={project} onUpdate={updateProject} onDelete={deleteProject} />;
-      case 'Files':
       case 'Discussion':
       case 'Generate':
         return <Message>{activeTab} 기능은 아직 구현되지 않았습니다.</Message>;
