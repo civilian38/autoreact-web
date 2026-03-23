@@ -7,6 +7,7 @@ import ProjectSettings from './ProjectSettings';
 import ApiDocsTab from '@/components/api-docs/ApiDocsTab';
 import PageDescriptionTab from '@/components/page-description/PageDescriptionTab';
 import ReactFilesView from '@/components/files/ReactFilesView';
+import DiscussionTab from '@/components/discussion/DiscussionTab';
 
 // Wrapper for the entire page to ensure proper layout for sticky elements
 const PageWrapper = styled.div`
@@ -51,6 +52,7 @@ const ContentContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  flex: 1; /* Added to fill bottom space */
 `;
 
 const Message = styled.p`
@@ -88,9 +90,10 @@ const ProjectDetailPage = () => {
         return <PageDescriptionTab projectId={projectId} />;
       case 'Files':
         return <ReactFilesView projectId={projectId} />;
+      case 'Discussion':
+        return <DiscussionTab projectId={projectId} />;
       case 'Project Settings':
         return <ProjectSettings project={project} onUpdate={updateProject} onDelete={deleteProject} />;
-      case 'Discussion':
       case 'Generate':
         return <Message>{activeTab} 기능은 아직 구현되지 않았습니다.</Message>;
       default:
