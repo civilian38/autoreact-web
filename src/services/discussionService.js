@@ -24,3 +24,18 @@ export const deleteDiscussion = async (discussionId) => {
   const response = await api.delete(`/discussion/detail/${discussionId}/`);
   return response.data;
 };
+
+export const getDiscussionChatList = async (discussionId) => {
+  const response = await api.get(`/discussion/chat/${discussionId}/list/`);
+  return response.data;
+};
+
+export const sendDiscussionChat = async (discussionId, data) => {
+  const response = await api.post(`/discussion/chat/${discussionId}/`, data);
+  return response.data;
+};
+
+export const summarizeDiscussion = async (discussionId) => {
+  const response = await api.post(`/discussion/chat/${discussionId}/summarize/`);
+  return response.data;
+};

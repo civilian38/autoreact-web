@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DiscussionSidebar from './sidebar/DiscussionSidebar';
+import DiscussionChatArea from './chat/DiscussionChatArea';
 
 const TabContainer = styled.div`
   display: flex;
@@ -10,20 +11,18 @@ const TabContainer = styled.div`
   width: 100%;
 `;
 
-const ChatArea = styled.div`
-  flex: 1;
-  background-color: ${({ theme }) => theme.cardBg};
-  border: 1px solid ${({ theme }) => theme.cardBorder};
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.subtleText};
-  font-size: 1.2rem;
-`;
-
 const DiscussionTab = ({ projectId }) => {
   const [selectedDiscussionId, setSelectedDiscussionId] = useState(null);
+  const [refreshSidebarToggle, setRefreshSidebarToggle] = useState(false);
+
+  const triggerSidebarRefresh = () => {
+    setRefreshSidebarToggle((prev) => !prev);
+  };
+
+  const handleDiscussionDeleted = () => {
+    setSelectedDiscussionId(null);
+    triggerSidebarRefresh();
+  };
 
   return (
     <TabContainer>
@@ -31,10 +30,13 @@ const DiscussionTab = ({ projectId }) => {
         projectId={projectId} 
         selectedId={selectedDiscussionId}
         onSelect={setSelectedDiscussionId} 
+        refreshTrigger={refreshSidebarToggle}
       />
-      <ChatArea>
-        [구현 예정]
-      </ChatArea>
+      <DiscussionChatArea 
+        discussionId={selectedDiscussionId}
+        onDeleted={handleDiscussionDeleted}
+        onUpdated={triggerSidebarRefresh}
+      />
     </TabContainer>
   );
 };

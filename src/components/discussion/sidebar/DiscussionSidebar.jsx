@@ -47,7 +47,7 @@ const LoadingText = styled.div`
   color: ${({ theme }) => theme.subtleText};
 `;
 
-const DiscussionSidebar = ({ projectId, selectedId, onSelect }) => {
+const DiscussionSidebar = ({ projectId, selectedId, onSelect, refreshTrigger }) => {
   const [discussions, setDiscussions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -69,7 +69,7 @@ const DiscussionSidebar = ({ projectId, selectedId, onSelect }) => {
 
   useEffect(() => {
     fetchDiscussions();
-  }, [fetchDiscussions]);
+  }, [fetchDiscussions, refreshTrigger]);
 
   const handleDiscussionCreated = () => {
     fetchDiscussions();
