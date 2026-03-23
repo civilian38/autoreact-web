@@ -21,12 +21,13 @@ const MenuItem = styled.button`
   padding: 8px 16px;
   background: none;
   border: none;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme, $isDanger }) => $isDanger ? theme.button.dangerBg : theme.text};
   font-size: 14px;
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.button.secondaryHoverBg};
+    background-color: ${({ theme, $isDanger }) => $isDanger ? theme.button.dangerHoverBg : theme.button.secondaryHoverBg};
+    color: ${({ theme, $isDanger }) => $isDanger ? theme.button.dangerText : theme.text};
   }
 `;
 
@@ -47,7 +48,7 @@ const ContextMenu = ({ x, y, options, onClose }) => {
   return (
     <MenuContainer ref={menuRef} x={x} y={y}>
       {options.map((opt, idx) => (
-        <MenuItem key={idx} onClick={() => { opt.action(); onClose(); }}>
+        <MenuItem key={idx} $isDanger={opt.isDanger} onClick={() => { opt.action(); onClose(); }}>
           {opt.label}
         </MenuItem>
       ))}

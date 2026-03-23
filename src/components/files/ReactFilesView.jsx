@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { getFolderStructure, updateFolder, createFolder, deleteFolder } from '@/services/fileStructureService';
+import { deleteFile, updateFile, createFile } from '@/services/fileService';
 import FileTreeView from './tree/FileTreeView';
 import ContextMenu from './ContextMenu';
 import FolderRenameModal from './modal/FolderRenameModal';
 import FolderMoveModal from './modal/FolderMoveModal';
 import FolderCreateModal from './modal/FolderCreateModal';
+import FileRenameModal from './modal/FileRenameModal';
+import FileMoveModal from './modal/FileMoveModal';
+import FileCreateModal from './modal/FileCreateModal';
+import FileDetailView from './detail/FileDetailView';
 
 const Container = styled.div`
   display: flex;
@@ -38,6 +43,21 @@ const TreeContent = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 8px 0;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.background};
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.cardBorder};
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.subtleText};
+  }
 `;
 
 const DetailPane = styled.div`
@@ -62,7 +82,7 @@ const ReactFilesView = ({ projectId }) => {
   const [loading, setLoading] = useState(true);
   
   const [contextMenu, setContextMenu] = useState(null);
-  const [modal, setModal] = useState(null); // { type: 'create' | 'rename' | 'move', target: folderData }
+  const [modal, setModal] = useState(null); // { type: 'create' | 'rename' | 'move' | 'rename_file' | 'move_file' | 'create_file', target: folderData | fileData }
 
   const fetchStructure = useCallback(async () => {
     try {
@@ -105,6 +125,21 @@ const ReactFilesView = ({ projectId }) => {
     }
   };
 
+  const handleDeleteFile = async (fileId) => {
+    if (window.confirm('Are you sure you want to delete this file?')) {
+      try {
+        await deleteFile(fileId);
+        await fetchStructure();
+        if (selectedFileId === fileId) {
+          setSelectedFileId(null);
+        }
+      } catch (e) {
+        console.error(e);
+        alert('파일 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   const getContextMenuOptions = () => {
     if (!contextMenu) return [];
     const { type, target } = contextMenu;
@@ -113,17 +148,25 @@ const ReactFilesView = ({ projectId }) => {
       const isRoot = rootFolder && target.id === rootFolder.id;
       const options = [
         { label: 'Create Folder', action: () => setModal({ type: 'create', target }) },
+        { label: 'Create File', action: () => setModal({ type: 'create_file', target }) },
       ];
       
       if (!isRoot) {
         options.push({ label: 'Rename Folder', action: () => setModal({ type: 'rename', target }) });
         options.push({ label: 'Move Folder', action: () => setModal({ type: 'move', target }) });
-        options.push({ label: 'Delete Folder', action: () => handleDeleteFolder(target.id) });
+        options.push({ label: 'Delete Folder', action: () => handleDeleteFolder(target.id), isDanger: true });
       }
       return options;
     }
     
-    // 파일에 대한 컨텍스트 메뉴는 추후 확장 가능
+    if (type === 'file') {
+      return [
+        { label: 'Rename File', action: () => setModal({ type: 'rename_file', target }) },
+        { label: 'Move File', action: () => setModal({ type: 'move_file', target }) },
+        { label: 'Delete File', action: () => handleDeleteFile(target.id), isDanger: true },
+      ];
+    }
+    
     return [];
   };
 
@@ -147,6 +190,37 @@ const ReactFilesView = ({ projectId }) => {
       console.error(e);
       alert('폴더 생성에 실패했습니다.');
     }
+  };
+
+  const handleFileCreate = async (parentFolderId, name) => {
+    try {
+      await createFile({ name, folder: parentFolderId, content: "", project_under: parseInt(projectId, 10) });
+      await fetchStructure();
+      setModal(null);
+    } catch (e) {
+      console.error(e);
+      alert('파일 생성에 실패했습니다.');
+    }
+  };
+
+  const handleFileUpdate = async (fileId, data) => {
+    try {
+      await updateFile(fileId, data);
+      await fetchStructure();
+      setModal(null);
+    } catch (e) {
+      console.error(e);
+      alert('파일 수정에 실패했습니다.');
+    }
+  };
+
+  const handleFileUpdateFromDetail = async () => {
+    await fetchStructure();
+  };
+
+  const handleFileDeleteFromDetail = async () => {
+    await fetchStructure();
+    setSelectedFileId(null);
   };
 
   if (loading) {
@@ -173,7 +247,11 @@ const ReactFilesView = ({ projectId }) => {
       </TreePane>
       <DetailPane>
         {selectedFileId ? (
-          <DetailContent>[구현 예정]</DetailContent>
+          <FileDetailView 
+            fileId={selectedFileId} 
+            onFileUpdate={handleFileUpdateFromDetail}
+            onDeleteSuccess={handleFileDeleteFromDetail}
+          />
         ) : (
           <DetailContent>Select a file to view code.</DetailContent>
         )}
@@ -197,6 +275,15 @@ const ReactFilesView = ({ projectId }) => {
         />
       )}
 
+      {modal && modal.type === 'create_file' && (
+        <FileCreateModal 
+          isOpen={true}
+          onClose={() => setModal(null)}
+          parentFolder={modal.target}
+          onConfirm={(name) => handleFileCreate(modal.target.id, name)}
+        />
+      )}
+
       {modal && modal.type === 'rename' && (
         <FolderRenameModal 
           isOpen={true}
@@ -213,6 +300,25 @@ const ReactFilesView = ({ projectId }) => {
           folder={modal.target}
           rootFolder={rootFolder}
           onConfirm={(parent_folder) => handleFolderUpdate(modal.target.id, { parent_folder })}
+        />
+      )}
+
+      {modal && modal.type === 'rename_file' && (
+        <FileRenameModal 
+          isOpen={true}
+          onClose={() => setModal(null)}
+          file={modal.target}
+          onConfirm={(name) => handleFileUpdate(modal.target.id, { name })}
+        />
+      )}
+
+      {modal && modal.type === 'move_file' && (
+        <FileMoveModal 
+          isOpen={true}
+          onClose={() => setModal(null)}
+          file={modal.target}
+          rootFolder={rootFolder}
+          onConfirm={(folder) => handleFileUpdate(modal.target.id, { folder })}
         />
       )}
     </Container>
