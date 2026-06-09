@@ -8,6 +8,7 @@ import ApiDocsTab from '@/components/api-docs/ApiDocsTab';
 import PageDescriptionTab from '@/components/page-description/PageDescriptionTab';
 import ReactFilesView from '@/components/files/ReactFilesView';
 import DiscussionTab from '@/components/discussion/DiscussionTab';
+import GenerateTab from '@/components/generate/GenerateTab';
 
 // Wrapper for the entire page to ensure proper layout for sticky elements
 const PageWrapper = styled.div`
@@ -95,7 +96,7 @@ const ProjectDetailPage = () => {
       case 'Project Settings':
         return <ProjectSettings project={project} onUpdate={updateProject} onDelete={deleteProject} />;
       case 'Generate':
-        return <Message>{activeTab} 기능은 아직 구현되지 않았습니다.</Message>;
+        return <GenerateTab projectId={projectId} />;
       default:
         return <Message>탭 기능을 선택하여 프로젝트 작업을 시작하세요.</Message>;
     }
