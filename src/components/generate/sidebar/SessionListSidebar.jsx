@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@/components/ui/Button';
-import { getSessionList } from '@/services/generationService';
 import SessionCreateModal from '../modal/SessionCreateModal';
 
 const SidebarContainer = styled.div`
@@ -30,12 +29,15 @@ const SidebarHeader = styled.div`
 const SessionList = styled.div`
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const SessionItem = styled.div`
   padding: 12px 16px;
   border-bottom: 1px solid ${({ theme }) => theme.cardBorder};
   cursor: pointer;
+  background-color: ${({ $isSelected, theme }) => $isSelected ? theme.background : 'transparent'};
   
   &:hover {
     background-color: ${({ theme }) => theme.background};
@@ -46,11 +48,14 @@ const SessionTitle = styled.div`
   font-weight: 500;
   color: ${({ $status, theme }) => {
     if ($status === 'ACTIVE') {
-      return theme.button.primaryBg; // 초록색 계열
+      return theme.button.primaryBg;
     }
-    return theme.text; // COMPLETED일 경우 일반 텍스트 색상
+    return theme.text;
   }};
   text-decoration: ${({ $status }) => $status === 'DISCARDED' ? 'line-through' : 'none'};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const EmptyMessage = styled.p`
@@ -60,26 +65,24 @@ const EmptyMessage = styled.p`
   font-size: 0.9rem;
 `;
 
-const SessionListSidebar = ({ projectId }) => {
-  const [sessions, setSessions] = useState([]);
+const LoadMoreContainer = styled.div`
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+`;
+
+const SessionListSidebar = ({ 
+  projectId, 
+  sessions, 
+  loading, 
+  selectedSessionId, 
+  onSelectSession, 
+  onRefresh, 
+  hasNext, 
+  loadingMore, 
+  onLoadMore 
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const fetchSessions = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getSessionList(projectId);
-      setSessions(data.results || []);
-    } catch (error) {
-      console.error('Failed to fetch sessions', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
-    fetchSessions();
-  }, [fetchSessions]);
 
   return (
     <SidebarContainer>
@@ -88,16 +91,32 @@ const SessionListSidebar = ({ projectId }) => {
         <Button variant="primary" onClick={() => setIsModalOpen(true)}>+ Add</Button>
       </SidebarHeader>
       <SessionList>
-        {loading ? (
+        {loading && sessions.length === 0 ? (
            <EmptyMessage>Loading...</EmptyMessage>
         ) : sessions.length === 0 ? (
            <EmptyMessage>No sessions found.</EmptyMessage>
         ) : (
-           sessions.map(session => (
-             <SessionItem key={session.id}>
-               <SessionTitle $status={session.status}>{session.title}</SessionTitle>
-             </SessionItem>
-           ))
+           <>
+             {sessions.map(session => (
+               <SessionItem 
+                 key={session.id}
+                 $isSelected={session.id === selectedSessionId}
+                 onClick={() => onSelectSession(session.id)}
+               >
+                 <SessionTitle $status={session.status}>
+                   <span>{session.title}</span>
+                   {session.is_occupied && <span title="Occupied">⏳</span>}
+                 </SessionTitle>
+               </SessionItem>
+             ))}
+             {hasNext && (
+               <LoadMoreContainer>
+                 <Button variant="secondary" onClick={onLoadMore} disabled={loadingMore}>
+                   {loadingMore ? 'Loading...' : 'Load More'}
+                 </Button>
+               </LoadMoreContainer>
+             )}
+           </>
         )}
       </SessionList>
 
@@ -107,7 +126,7 @@ const SessionListSidebar = ({ projectId }) => {
         projectId={projectId}
         onSuccess={() => {
            setIsModalOpen(false);
-           fetchSessions();
+           onRefresh();
         }}
       />
     </SidebarContainer>
